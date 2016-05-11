@@ -28,7 +28,7 @@ feature -- Testing: Creation
 		local
 			l_any: EWX_ANY
 			l_page: EWX_HTML_PAGE_RESPONSE
-			l_cache: EWX_CACHE
+			l_cache: EWX_FILE_CACHE
 		do
 			create l_any
 			create l_page.make_standard ("title", "en", create {HTML_DIV})
