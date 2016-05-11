@@ -16,6 +16,9 @@ inherit
 		end
 
 	EWX_HTTP_MIME_TYPES
+		export {NONE}
+			all
+		end
 
 feature -- Basic Operations
 
@@ -71,7 +74,7 @@ feature -- Basic Operations
 				last_file_template := l_file_string
 
 					-- Locate the file (if we can)...
-				scan_path (create {PATH}.make_from_string (".\files"), 0)
+				scan_path (create {PATH}.make_from_string (files_folder_path), 0)
 
 					-- Handle the response
 				if attached last_file_path as al_path then
@@ -91,11 +94,42 @@ feature {NONE} -- Implementation: File location services
 
 	file_name_in_request (a_request: WSF_REQUEST): STRING
 			-- `file_name_in_request' `a_request'.
+		note
+			semantic: "[
+				This feature takes in a request, which may be a call with
+				back/forward-slashed heirarchy, such as: images/my_image.png
+				]"
+			design_intent: "[
+				The entire design of the caching system for files is that
+				one can place a file anywhere in a file structure and the
+				code can locate it.
+				
+				To ensure we are looking only for file resource names, we need
+				to strip any pathing information from the request. This feature
+				performs that job.
+				]"
+			warning: "[
+				The caveat is that the file names must be unique because the
+				system will find the first file matching the request and return
+				it. If the name of the file resource is not unique, then there
+				remains the possibility that the first file found may not be
+				the correct file. Thus, the incumbancy on the file resource
+				provider/maintainer to ensure uniqueness of file resource names!
+				]"
+			todo: "[
+				(1) Ensure uniqueness of named file resources! This may be another
+				part of the system or it may be something like the Eiffel Studio
+				UUID mechanism. The system may need to understand that files are
+				not located in a single directly, but in one or more. If so, then
+				there will need to be a design discussion around this. For the moment,
+				we can place all files in a single directly named "files" and then
+				ensure unique file names in that structure.
+				]"
 		local
 			l_list: LIST [STRING]
 		do
 			create Result.make_empty
-			l_list := a_request.request_uri.out.split ('/')
+			l_list := a_request.request_uri.out.split (forward_slash)
 			if not l_list.is_empty then
 				Result := l_list [l_list.count]
 			end
@@ -117,5 +151,22 @@ feature {NONE} -- Implementation: File location services
 
 	last_file_path: detachable PATH
 			-- The `last_file_path' used by Clients like `file_response_handler' (possibly more).
+
+feature {NONE} -- Implementation: Constants
+
+	files_folder_path: STRING
+		once ("object")
+			Result := current_location.out + backslash.out + files_folder
+		end
+
+	files_folder: STRING
+			-- `file_folder'.
+		once ("object")
+			Result := "files"
+		end
+
+	forward_slash: CHARACTER = '/'
+	backslash: CHARACTER = '\'
+	current_location: CHARACTER = '.'
 
 end

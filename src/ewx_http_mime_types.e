@@ -13,6 +13,11 @@ feature -- Queries
 
 	context_type_for_request (a_request: WSF_REQUEST): detachable STRING
 			-- `context_type_for_request' `a_request'.
+		note
+			todo: "[
+				(1) Extend this feature to cover the remaining MIME types
+					and match them to their various forms of `a_request'.
+				]"
 		local
 			l_ext: STRING
 			l_list: LIST [STRING]

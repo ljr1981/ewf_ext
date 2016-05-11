@@ -6,4 +6,9 @@ note
 class
 	EWX_ANY
 
+feature -- Documentation
+
+	documentation: detachable EWX_DOCS
+			-- Documentation for Current
+
 end
