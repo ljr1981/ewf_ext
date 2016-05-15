@@ -41,6 +41,8 @@ feature -- Queries
 					Result := image_tiff
 				elseif l_ext.same_string ("ico") then
 					Result := image_x_ico
+				elseif l_ext.same_string ("mp4") then
+					Result := "video/mp4"
 
 					-- Application types
 				elseif l_ext.same_string ("js") then
@@ -50,7 +52,9 @@ feature -- Queries
 				elseif l_ext.same_string ("css") then
 					Result := text_css
 
-					-- Unknown
+					-- html
+				elseif l_ext.same_string ("html") then
+					Result := text_html
 				else
 					check unknown_content_type: False end
 				end
