@@ -1,13 +1,13 @@
 note
 	description: "[
-		Representation of a {APP_EXECUTION}.
+		Representation of a {EWX_APP_EXECUTION}.
 		]"
 	design: "[
 		See notes at the end of this class.
 		]"
 
 class
-	APP_EXECUTION
+	EWX_APP_EXECUTION
 
 inherit
 	WSF_ROUTED_EXECUTION
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation: Constants
 
 note
 	design: "[
-		{APP_EXECUTION} is just a template (starting point) to build from. You may
+		{EWX_APP_EXECUTION} is just a template (starting point) to build from. You may
 		design your application any way you like or want. However, the basics are
 		fairly well established: Each instance of a Web Service has a Router, which
 		uses URI templates to route incoming Client requests through the Web Server

@@ -1,15 +1,15 @@
 note
 	description: "[
-		Representation of a template Web Server {APPLICATION} 
-			as a {WSF_DEFAULT_SERVICE} using {APP_EXECUTION} as
+		Representation of a template Web Server {EWX_APPLICATION} 
+			as a {WSF_DEFAULT_SERVICE} using {EWX_APP_EXECUTION} as
 			a router/responder.
 		]"
 
 class
-	APPLICATION
+	EWX_APPLICATION
 
 inherit
-	WSF_DEFAULT_SERVICE [APP_EXECUTION]
+	WSF_DEFAULT_SERVICE [EWX_APP_EXECUTION]
 		redefine
 			initialize
 		end
@@ -47,9 +47,9 @@ note
 	(1) What process (program) will be the Web Server (httpd)? 	--> {WSF_DEFAULT_SERVICE}
 	(2) What process (program) will route request messages 
 			coming through the Web Server and then serve up
-			responses to the Web Client?						--> {APP_EXECUTION}
+			responses to the Web Client?						--> {EWX_APP_EXECUTION}
 	
-	See the {APP_EXECUTION} class for more details about request
+	See the {EWX_APP_EXECUTION} class for more details about request
 	routing and reponse building-and-sending.
 	]"
 

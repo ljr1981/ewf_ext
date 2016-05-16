@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="ewf_ext" uuid="20BC8E08-C002-E199-2916-000000436B69" library_target="ewf_ext">
 	<description>ewf_ext implementation</description>
 	<target name="ewf_ext">
@@ -30,7 +30,7 @@
 	</target>
 	<target name="test" extends="ewf_ext">
 		<description>ewf_ext Tests</description>
-		<root class="APPLICATION" feature="make_and_launch"/>
+		<root class="EWX_APPLICATION" feature="make_and_launch"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
 			<exclude>/.svn$</exclude>
