@@ -13,12 +13,14 @@ inherit
 	WSF_HTML_PAGE_RESPONSE
 
 create
-	make_standard
+	make_standard,
+	make_standard_with_raw_text
 
 feature {NONE} -- Initialization
 
 	make_standard (a_title, a_language_code: STRING; a_widget: HTML_TAG)
-			-- `make_standard' in `a_title' and `a_language_code'.
+			-- `make_standard' with `a_title' and `a_language_code' using `a_widget'.
+			-- The `a_widget' will be the first subordinate <tag> beneath <body>.
 		do
 			make
 			set_title (a_title)
@@ -28,6 +30,13 @@ feature {NONE} -- Initialization
 		ensure
 			set_title: attached title as al_title and then al_title.same_string (a_title)
 			set_code: attached language as al_language and then al_language.same_string (a_language_code)
+		end
+
+	make_standard_with_raw_text (a_title, a_language_code, a_raw_text: STRING)
+			-- `make_standard' with `a_title', `a_language_code', and `a_raw_text'.
+			-- See `make_standard' for more feature comments.
+		do
+			make_standard (a_title, a_language_code, create {HTML_TEXT}.make_with_text (a_raw_text))
 		end
 
 feature -- Settings
