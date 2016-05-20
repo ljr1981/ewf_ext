@@ -41,6 +41,16 @@ feature {NONE} -- Initialization
 
 feature -- Settings
 
+	add_css_file_link (a_css_file_name: STRING)
+		do
+			head_lines.force ((create {HTML_LINK}.make_as_css_file_link (a_css_file_name)).html_out)
+		end
+
+	add_js_file_script (a_js_file_name: STRING)
+		do
+			head_lines.force ((create {HTML_SCRIPT}.make_with_javascript_file_name (a_js_file_name)).html_out)
+		end
+
 	add_widget_externals (a_widget: HTML_TAG)
 			-- `add_widget_externals' for `a_widget' (i.e. external CSS/JS file references).
 		do

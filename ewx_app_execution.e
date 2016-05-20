@@ -25,13 +25,14 @@ feature {NONE} -- Initialization
 				-- Common file requests
 			map_uri_template_agent ("/{path_and_file}.js", agent cache.file_response_handler, get_method_request)
 			map_uri_template_agent ("/{path_and_file}.css", agent cache.file_response_handler, get_method_request)
-			
+
 				-- Images and Video
 			map_uri_template_agent ("/{path_and_file}.gif", agent cache.file_response_handler, get_method_request)
 			map_uri_template_agent ("/{path_and_file}.png", agent cache.file_response_handler, get_method_request)
 			map_uri_template_agent ("/{path_and_file}.jpg", agent cache.file_response_handler, get_method_request)
 			map_uri_template_agent ("/{path_and_file}.bmp", agent cache.file_response_handler, get_method_request)
 			map_uri_template_agent ("/{path_and_file}.mp4", agent cache.file_response_handler, get_method_request)
+			is_common_file_mapping_setup_routed := True
 		end
 
 	cache: EWX_FILE_CACHE
@@ -53,5 +54,11 @@ feature {NONE} -- Implementation: Constants
 		once ("object")
 			create Result.make_from_string ({WSF_REQUEST_METHODS}.method_get)
 		end
+
+	is_common_file_mapping_setup_routed: BOOLEAN
+			-- `is_common_file_mapping_setup_routed' ensures `setup_router' has executed.
+
+invariant
+	setup_router_executed: is_common_file_mapping_setup_routed
 
 end
