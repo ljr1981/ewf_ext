@@ -60,7 +60,10 @@ feature -- Basic Operations
 			l_stop: DATE_TIME
 		do
 			create l_start.make_now
-			if attached uri_content (a_request.request_uri.out) as al_cached_content then
+			if
+				not a_request.request_uri.has_substring (".mp4") and then
+				attached uri_content (a_request.request_uri.out) as al_cached_content
+			then
 				print ("Send-cached: " + a_request.request_uri.out + "%N")
 				a_response.send (al_cached_content)
 			else
