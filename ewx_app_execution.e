@@ -55,6 +55,12 @@ feature {NONE} -- Implementation: Constants
 			create Result.make_from_string ({WSF_REQUEST_METHODS}.method_get)
 		end
 
+	Post_method_request: WSF_REQUEST_METHODS
+			-- Get_method_request (i.e. "POST")
+		once ("object")
+			create Result.make_from_string ({WSF_REQUEST_METHODS}.method_post)
+		end
+
 	is_common_file_mapping_setup_routed: BOOLEAN
 			-- `is_common_file_mapping_setup_routed' ensures `setup_router' has executed.
 

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="ewf_ext" uuid="20BC8E08-C002-E199-2916-000000436B69" library_target="ewf_ext">
 	<description>ewf_ext implementation</description>
 	<target name="ewf_ext">
@@ -41,6 +41,7 @@
 		<option profile="false">
 		</option>
 		<setting name="console_application" value="false"/>
+		<setting name="concurrency" value="scoop"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
 		<cluster name="tests" location=".\tests\" recursive="true"/>
 	</target>
