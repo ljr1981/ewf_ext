@@ -9,15 +9,15 @@
 		<setting name="console_application" value="true"/>
 		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="default_standalone" location="$GITHUB\ewf\library\server\wsf\default\standalone-safe.ecf"/>
-		<library name="encoder-safe" location="$GITHUB\ewf\library\text\encoder\encoder-safe.ecf"/>
-		<library name="framework" location="$GITHUB\framework\framework.ecf"/>
-		<library name="html" location="$GITHUB\html\html.ecf"/>
-		<library name="http-safe" location="$GITHUB\ewf\library\network\protocol\http\http-safe.ecf"/>
-		<library name="test_extension" location="$GITHUB\test_extension\test_extension.ecf"/>
+		<library name="default_standalone" location="..\ewf\library\server\wsf\default\standalone-safe.ecf"/>
+		<library name="encoder-safe" location="..\ewf\library\text\encoder\encoder-safe.ecf"/>
+		<library name="framework" location="..\framework\framework.ecf"/>
+		<library name="html" location="..\html\html.ecf"/>
+		<library name="http-safe" location="..\ewf\library\network\protocol\http\http-safe.ecf"/>
+		<library name="test_extension" location="..\test_extension\test_extension.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
-		<library name="wsf-safe" location="$GITHUB\ewf\library\server\wsf\wsf-safe.ecf"/>
+		<library name="wsf-safe" location="..\ewf\library\server\wsf\wsf-safe.ecf"/>
 		<cluster name="ewf_ext" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/.git$</exclude>
