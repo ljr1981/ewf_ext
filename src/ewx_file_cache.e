@@ -54,7 +54,6 @@ feature -- Basic Operations
 				]"
 		local
 			l_file_response: WSF_FILE_RESPONSE
-			l_file: PLAIN_TEXT_FILE
 			l_file_string: STRING
 			l_start,
 			l_stop: DATE_TIME
@@ -64,7 +63,6 @@ feature -- Basic Operations
 				not a_request.request_uri.has_substring (".mp4") and then
 				attached uri_content (a_request.request_uri.out) as al_cached_content
 			then
---				print ("Send-cached: " + a_request.request_uri.out + "%N")
 				a_response.send (al_cached_content)
 			else
 					-- Prep for the next file ...
@@ -84,13 +82,10 @@ feature -- Basic Operations
 					create l_file_response.make (al_path.name.out + "\" + l_file_string)
 					add_uri (a_request.request_uri.out, [l_file_response.twin, context_type_for_request (a_request), True, create {DATE_TIME}.make_now, l_file_response.file_path])
 					a_response.send (l_file_response)
---					print ("Sending-file: " + a_request.request_uri.out + "%N")
 				else
---					print ("Logging: File not found - " + a_request.request_uri + "%N")
 				end
 			end
 			create l_stop.make_now
---			print ("Total-time: " + l_start.out + "%T" + l_stop.out + "%T" + (l_stop.fine_second - l_start.fine_second).out + "%N")
 		end
 
 feature {NONE} -- Implementation: File location services
