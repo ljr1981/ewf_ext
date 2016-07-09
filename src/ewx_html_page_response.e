@@ -57,8 +57,6 @@ feature {NONE} -- Initialization
 			loop
 				head_lines.force (ic_scripts.item.document_ready_script)
 			end
-
-			add_widget_externals (a_widget)
 		ensure
 			set_title: attached title as al_title and then al_title.same_string (a_title)
 			set_code: attached language as al_language and then al_language.same_string (a_language_code)
@@ -87,21 +85,6 @@ feature -- Settings
 	add_js_file_script (a_js_file_name: STRING)
 		do
 			head_lines.force ((create {HTML_SCRIPT}.make_with_javascript_file_name (a_js_file_name)).html_out)
-		end
-
-	add_widget_externals (a_widget: HTML_TAG)
-			-- `add_widget_externals' for `a_widget' (i.e. external CSS/JS file references).
-		do
-			across
-				a_widget.external_js_files as ic_script
-			loop
-				head_lines.force (ic_script.item.html_out)
-			end
-			across
-				a_widget.external_css_files as ic_link
-			loop
-				head_lines.force (ic_link.item.html_out)
-			end
 		end
 
 note
