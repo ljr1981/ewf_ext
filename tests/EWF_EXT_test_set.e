@@ -35,4 +35,13 @@ feature -- Testing: Creation
 			create l_cache
 		end
 
+	file_scan_tests
+			--
+		local
+			l_cache: EWX_FILE_CACHE
+		do
+			create l_cache
+			l_cache.scan_path (create {PATH}.make_from_string (".\files\"), 0)
+		end
+
 end

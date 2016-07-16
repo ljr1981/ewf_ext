@@ -10,7 +10,7 @@ inherit
 	EWX_CACHE
 
 	FW_PATH_SCANNER
-		export {NONE}
+		export {TEST_SET_BRIDGE}
 			scan_path,
 			is_scan_down
 		end
