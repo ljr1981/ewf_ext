@@ -88,6 +88,16 @@ feature -- Basic Operations
 			create l_stop.make_now
 		end
 
+feature -- Setters
+
+	set_last_file_template (a_last_file_template: like last_file_template)
+			-- `set_last_file_template' with `a_last_file_template'
+		do
+			last_file_template := a_last_file_template
+		ensure
+			set: last_file_template ~ a_last_file_template
+		end
+
 feature {NONE} -- Implementation: File location services
 
 	file_name_in_request (a_request: WSF_REQUEST): STRING

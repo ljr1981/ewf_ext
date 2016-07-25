@@ -19,7 +19,7 @@ feature -- Access
 			-- `add_uri' `a_uri' with `a_uri_data'.
 			-- Call this to `add_uri' with `a_uri_data' to the cache. Get it back by calling `uri_content'.
 		do
-			cache.force (a_uri_data, a_uri)
+			cache.force (a_uri_data, a_uri.hash_code)
 		end
 
 feature -- Queries
@@ -28,7 +28,7 @@ feature -- Queries
 			-- Possible `uri_content' for `a_uri'.
 			-- Call this to fetch `uri_content' based on some passed `a_uri'.
 		do
-			if attached cache.at (a_uri) as al_uri_data then
+			if attached cache.at (a_uri.hash_code) as al_uri_data then
 				Result := al_uri_data.content
 			end
 		end
@@ -37,7 +37,7 @@ feature -- Queries
 			-- Possible `uri_content_type' for `a_uri'.
 			-- Call this to fetch `uri_content' based on some passed `a_uri'.
 		do
-			if attached cache.at (a_uri) as al_uri_data then
+			if attached cache.at (a_uri.hash_code) as al_uri_data then
 				Result := al_uri_data.content_type
 			end
 		end
@@ -46,19 +46,19 @@ feature -- Queries
 			-- Possible `uri_content_type' for `a_uri'.
 			-- Call this to fetch `uri_content' based on some passed `a_uri'.
 		do
-			if attached cache.at (a_uri) as al_uri_data then
+			if attached cache.at (a_uri.hash_code) as al_uri_data then
 				Result := al_uri_data
 			end
 		end
 
 feature {NONE} -- Implementation: Access
 
-	cache: HASH_TABLE [attached like uri_data_anchor, attached like uri_anchor]
+	cache: HASH_TABLE [attached like uri_data_anchor, INTEGER]
 			-- `cache' of items in Current {EWX_CACHE}.
 		note
 			design: "[
 				The `cache' hash has a collection of `uri_data_anchor' items, keyed
-				from `uri_anchor's. This allows the client to look up their URI and
+				from `uri_anchor's hash code. This allows the client to look up their URI and
 				get back the URI data for that item.
 				]"
 		attribute
