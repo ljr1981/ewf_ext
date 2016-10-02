@@ -24,78 +24,23 @@ feature -- Basic Operations
 
 	file_response_handler (a_request: WSF_REQUEST; a_response: WSF_RESPONSE)
 			-- `file_response_handler' handles `a_request', sending the file back in `a_response'.
-			-- This feature will log failed (not on disk or in cache) as needed.
-		note
-			design: "[
-				All forms of static files (possibly images) (presumed to 
-				be files on the file system) are routed here (see setup 
-				mapping handlers). The chores are pretty standard:
-				
-				(1) Turn the request file URI into a string and append
-					that to the primary ".\images" folder, where we
-					expect to find the requested file (there might be
-					others in the future).
-					
-				(2) Use the `handle_current_path' of {FW_PATH_SCANNER} to
-					locate (if there) the precise {PATH} that the file is
-					located in.
-					
-				(3) If found, then create the {WSF_FILE_RESPONSE} with the
-					located file path and name as a {STRING} and then send
-					that file in the response. Otherwise, log the failure.
-				]"
-			todo: "[
-				(1) Removal of "/images" from the `l_file_string' is a temporary fix.
-					This is due to the WC_EDITOR CSS/JS, where the images come in
-					with folder prefixes. The mapping templates need to be coded
-					to do a better job of managing this. Perhaps sending the image-containing
-					maps to another handler, which does the stripping and then hands-off
-					to this routine?
-				]"
 		local
 			l_file_response: WSF_FILE_RESPONSE
-			l_file_string: STRING
-			l_start,
-			l_stop: DATE_TIME
 		do
-			create l_start.make_now
 			if
 				not a_request.request_uri.has_substring (".mp4") and then
 				attached uri_content (a_request.request_uri.out) as al_cached_content
 			then
 				a_response.send (al_cached_content)
 			else
-					-- Prep for the next file ...
-				last_file_template := Void
-				last_file_path := Void
-				is_scan_down := False
-
-					-- Get set up
-				l_file_string := file_name_in_request (a_request)
-				last_file_template := l_file_string
-
-					-- Locate the file (if we can)...
-				scan_path (create {PATH}.make_from_string (files_folder_path), 0)
-
-					-- Handle the response
-				if attached last_file_path as al_path then
-					create l_file_response.make (al_path.name.out + "\" + l_file_string)
+				if attached scan (create {PATH}.make_from_string (files_folder_path), file_name_in_request (a_request)) as al_path then
+					create l_file_response.make (al_path.absolute_path.name.out)
 					add_uri (a_request.request_uri.out, [l_file_response.twin, context_type_for_request (a_request), True, create {DATE_TIME}.make_now, l_file_response.file_path])
 					a_response.send (l_file_response)
 				else
+					print ("Not found: " + a_request.request_uri + "%N")
 				end
 			end
-			create l_stop.make_now
-		end
-
-feature -- Setters
-
-	set_last_file_template (a_last_file_template: like last_file_template)
-			-- `set_last_file_template' with `a_last_file_template'
-		do
-			last_file_template := a_last_file_template
-		ensure
-			set: last_file_template ~ a_last_file_template
 		end
 
 feature {NONE} -- Implementation: File location services
@@ -138,7 +83,7 @@ feature {NONE} -- Implementation: File location services
 		do
 			create Result.make_empty
 			l_list := a_request.request_uri.out.split (forward_slash)
-			if not l_list.is_empty then
+			check has_list: not l_list.is_empty then
 				Result := l_list [l_list.count]
 			end
 		end
@@ -146,7 +91,7 @@ feature {NONE} -- Implementation: File location services
 	handle_current_path (a_path: PATH; a_level: INTEGER)
 			-- <Precursor>
 		do
-			check has_template: attached {STRING} last_file_template as al_template then
+			if attached {STRING} last_file_template as al_template then
 				if (create {DIRECTORY}.make_with_path (a_path)).has_entry (al_template) then
 					last_file_path := a_path
 				end
@@ -163,8 +108,10 @@ feature {NONE} -- Implementation: File location services
 feature {NONE} -- Implementation: Constants
 
 	files_folder_path: STRING
+		local
+			l_env: EXECUTION_ENVIRONMENT
 		once ("object")
-			Result := current_location.out + backslash.out + files_folder
+			Result := current_location + backslash.out + files_folder
 		end
 
 	files_folder: STRING
@@ -175,6 +122,12 @@ feature {NONE} -- Implementation: Constants
 
 	forward_slash: CHARACTER = '/'
 	backslash: CHARACTER = '\'
-	current_location: CHARACTER = '.'
+	current_location: STRING
+		local
+			l_env: EXECUTION_ENVIRONMENT
+		once
+			create l_env
+			Result := l_env.current_working_path.absolute_path.name.out
+		end
 
 end
