@@ -37,13 +37,25 @@ feature {NONE} -- Initialization
 			set_xml_lang (a_language_code)
 
 			initialize_widget (a_widget)
-			body.add_content (a_widget)
+			body.extend (a_widget)
 
 			head.add_content (create {HTML_TITLE}.make_with_content (<<create {HTML_TEXT}.make_with_text (a_title)>>))
 			build_head (body, head)
 			build_body_scripts (a_widget)
 			create header.make_from_raw_header_data (head.html_out)
 			header.put_content_type_text_html
+
+			across
+				manually_specified_css_files as ic
+			loop
+				add_css_link (ic.item)
+			end
+
+			across
+				manually_specified_javascript_files as ic
+			loop
+				add_javascript_script (ic.item)
+			end
 		end
 
 	initialize_widget (a_widget: HTML_TAG)
@@ -58,7 +70,7 @@ feature {NONE} -- Initialization
 		do
 			create l_body_scripts.make (10)
 			a_widget.add_body_scripts (l_body_scripts)
-			across l_body_scripts as ic_scripts loop body.add_content (ic_scripts.item) end
+			across l_body_scripts as ic_scripts loop body.extend (ic_scripts.item) end
 		end
 
 	make_standard_with_raw_text (a_title, a_language_code, a_raw_text: STRING)
@@ -68,7 +80,7 @@ feature {NONE} -- Initialization
 			l_div: HTML_DIV
 		do
 			create l_div
-			l_div.add_content (create {HTML_TEXT}.make_with_text (a_raw_text))
+			l_div.extend (create {HTML_TEXT}.make_with_text (a_raw_text))
 			make_standard (a_title, a_language_code, l_div)
 		end
 

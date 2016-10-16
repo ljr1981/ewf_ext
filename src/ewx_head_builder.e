@@ -1,10 +1,20 @@
-class
+deferred class
 	EWX_HEAD_BUILDER
 
 inherit
 	EWX_ANY
 
 feature {NONE} -- Initialization
+
+	manually_specified_css_files: ARRAY [STRING]
+			-- A list of `manually_specified_css_files'
+		deferred
+		end
+
+	manually_specified_javascript_files: ARRAY [STRING]
+			-- A list of `manually_specified_javascript_files'
+		deferred
+		end
 
 	build_head (a_widget: HTML_TAG; a_head: HTML_HEAD)
 			-- Build the <head> ... </head> content.
