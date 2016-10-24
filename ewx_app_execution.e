@@ -52,13 +52,13 @@ feature {NONE} -- Implementation: Constants
 
 	get_method_request: WSF_REQUEST_METHODS
 			-- `get_method_request' (i.e. "GET")
-		once ("object")
+		once
 			create Result.make_from_string ({WSF_REQUEST_METHODS}.method_get)
 		end
 
 	Post_method_request: WSF_REQUEST_METHODS
 			-- Get_method_request (i.e. "POST")
-		once ("object")
+		once
 			create Result.make_from_string ({WSF_REQUEST_METHODS}.method_post)
 		end
 

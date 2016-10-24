@@ -37,6 +37,8 @@ feature -- Basic Operations
 					create l_file_response.make (al_path.absolute_path.name.out)
 					add_uri (a_request.request_uri.out, [l_file_response.twin, context_type_for_request (a_request), True, create {DATE_TIME}.make_now, l_file_response.file_path])
 					a_response.send (l_file_response)
+				else
+					a_response.send (create {WSF_NOT_FOUND_RESPONSE}.make (a_request))
 				end
 			end
 		end
