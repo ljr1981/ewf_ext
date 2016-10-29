@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			-- Setup image mapping and caching
 		do
 				-- Common file requests
+			map_uri_template_agent ("/{path_and_file}.ico", agent cache.file_response_handler, get_method_request)
 			map_uri_template_agent ("/{path_and_file}.js", agent cache.file_response_handler, get_method_request)
 			map_uri_template_agent ("/{path_and_file}.css", agent cache.file_response_handler, get_method_request)
 

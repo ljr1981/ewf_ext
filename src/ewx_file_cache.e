@@ -26,6 +26,7 @@ feature -- Basic Operations
 			-- `file_response_handler' handles `a_request', sending the file back in `a_response'.
 		local
 			l_file_response: WSF_FILE_RESPONSE
+			l_meta: HTML_META
 		do
 			if
 				not a_request.request_uri.has_substring (".mp4") and then
@@ -36,6 +37,10 @@ feature -- Basic Operations
 				if attached scan (create {PATH}.make_from_string (files_folder_path), file_name_in_request (a_request)) as al_path then
 					create l_file_response.make (al_path.absolute_path.name.out)
 					add_uri (a_request.request_uri.out, [l_file_response.twin, context_type_for_request (a_request), True, create {DATE_TIME}.make_now, l_file_response.file_path])
+					create l_meta
+					l_meta.set_html_equiv ("Content-cache")
+					l_meta.set_content ("max-age=60")
+					l_file_response.header.add_header (l_meta.html_out)
 					a_response.send (l_file_response)
 				else
 					a_response.send (create {WSF_NOT_FOUND_RESPONSE}.make (a_request))
