@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 
 			build_head (body, head)
 			build_body_scripts (a_widget)
+			build_body_styles (a_widget)
 			create header.make_from_raw_header_data (head.html_out)
 			header.put_content_type_text_html
 
@@ -88,6 +89,16 @@ feature {NONE} -- Initialization
 			create l_body_scripts.make (10)
 			a_widget.add_body_scripts (l_body_scripts)
 			across l_body_scripts as ic_scripts loop body.extend (ic_scripts.item) end
+		end
+
+	build_body_styles (a_widget: HTML_TAG)
+			-- `build_body_styles', which are <style> elements extracted from `a_widget' tree.
+		local
+			l_body_styles: ARRAYED_LIST [HTML_STYLE]
+		do
+			create l_body_styles.make (10)
+			a_widget.add_body_styles (l_body_styles)
+			across l_body_styles as ic_styles loop body.extend (ic_styles.item) end
 		end
 
 	make_standard_with_raw_text (a_title, a_language_code, a_raw_text: STRING)

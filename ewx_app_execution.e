@@ -27,6 +27,10 @@ feature {NONE} -- Initialization
 			map_uri_template_agent ("/{path_and_file}.js", agent cache.file_response_handler, get_method_request)
 			map_uri_template_agent ("/{path_and_file}.css", agent cache.file_response_handler, get_method_request)
 
+			map_uri_template_agent ("/{path_and_file}.ICO", agent cache.file_response_handler, get_method_request)
+			map_uri_template_agent ("/{path_and_file}.JS", agent cache.file_response_handler, get_method_request)
+			map_uri_template_agent ("/{path_and_file}.CSS", agent cache.file_response_handler, get_method_request)
+
 				-- Images and Video
 			map_uri_template_agent ("/{path_and_file}.gif", agent cache.file_response_handler, get_method_request)
 			map_uri_template_agent ("/{path_and_file}.png", agent cache.file_response_handler, get_method_request)
@@ -34,6 +38,14 @@ feature {NONE} -- Initialization
 			map_uri_template_agent ("/{path_and_file}.jpeg", agent cache.file_response_handler, get_method_request)
 			map_uri_template_agent ("/{path_and_file}.bmp", agent cache.file_response_handler, get_method_request)
 			map_uri_template_agent ("/{path_and_file}.mp4", agent cache.file_response_handler, get_method_request)
+
+			map_uri_template_agent ("/{path_and_file}.GIF", agent cache.file_response_handler, get_method_request)
+			map_uri_template_agent ("/{path_and_file}.PNG", agent cache.file_response_handler, get_method_request)
+			map_uri_template_agent ("/{path_and_file}.JPG", agent cache.file_response_handler, get_method_request)
+			map_uri_template_agent ("/{path_and_file}.JPEG", agent cache.file_response_handler, get_method_request)
+			map_uri_template_agent ("/{path_and_file}.BMP", agent cache.file_response_handler, get_method_request)
+			map_uri_template_agent ("/{path_and_file}.MP4", agent cache.file_response_handler, get_method_request)
+
 			is_common_file_mapping_setup_routed := True
 		end
 

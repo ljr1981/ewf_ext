@@ -25,6 +25,7 @@ feature -- Queries
 			l_list := a_request.request_uri.out.split ('.')
 			if l_list.count >= 2 then
 				l_ext := l_list [l_list.count]
+				l_ext.to_lower
 				if l_ext.same_string ("bmp") then
 					Result := image_bmp
 				elseif l_ext.same_string ("gif") then
