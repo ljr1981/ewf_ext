@@ -56,8 +56,6 @@ feature {NONE} -- Initialization
 			last_new_meta.set_content ("width=device-width, initial-scale=1")
 
 			build_head (body, head)
-			build_body_scripts (a_widget)
-			build_body_styles (a_widget)
 			create header.make_from_raw_header_data (head.html_out)
 			header.put_content_type_text_html
 
@@ -74,6 +72,8 @@ feature {NONE} -- Initialization
 				create l_javascript.make_with_javascript_file_name (ic.item)
 				body.extend (l_javascript)
 			end
+			build_body_scripts (a_widget)
+			build_body_styles (a_widget)
 		end
 
 	initialize_widget (a_widget: HTML_TAG)
