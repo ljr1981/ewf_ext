@@ -20,32 +20,45 @@ inherit
 			all
 		end
 
+	EWX_COMPRESSION_ENABLED
+
 feature -- Basic Operations
 
 	file_response_handler (a_request: WSF_REQUEST; a_response: WSF_RESPONSE)
 			-- `file_response_handler' handles `a_request', sending the file back in `a_response'.
 		local
-			l_file_response: WSF_FILE_RESPONSE
 			l_meta: HTML_META
+			l_file: RAW_FILE
+ 			l_extension: STRING
+ 			l_datetime: DATE_TIME
 		do
 			if
 				not a_request.request_uri.has_substring (".mp4") and then
-				attached uri_content (a_request.request_uri.out) as al_cached_content
+				attached uri_content (a_request.request_uri.out) as al_cached_file_response
 			then
-				a_response.send (al_cached_content)
+				send_uri_content (a_request, a_response, al_cached_file_response)
 			else
 				if attached scan (create {PATH}.make_from_string (files_folder_path), file_name_in_request (a_request)) as al_path then
-					create l_file_response.make (al_path.absolute_path.name.out)
-					add_uri (a_request.request_uri.out, [l_file_response.twin, context_type_for_request (a_request), True, create {DATE_TIME}.make_now, l_file_response.file_path])
-					create l_meta
-					l_meta.set_html_equiv ("Content-cache")
-					l_meta.set_content ("max-age=60")
-					l_file_response.header.add_header (l_meta.html_out)
-					a_response.send (l_file_response)
+					add_uri_from_path (a_request.request_uri.out, al_path)
+					check has_uri_content: attached uri_content (a_request.request_uri.out) as al_cached_file_response then
+						send_uri_content (a_request, a_response, al_cached_file_response)
+					end
 				else
 					a_response.send (create {WSF_NOT_FOUND_RESPONSE}.make (a_request))
 				end
 			end
+		end
+
+	send_uri_content (a_request: WSF_REQUEST; a_response: WSF_RESPONSE; a_uri_content: attached like uri_data_anchor)
+		local
+			l_extension: STRING
+		do
+			if attached a_uri_content.content_type as al_ext then
+				l_extension := al_ext.out
+			else
+				create l_extension.make_empty
+			end
+			send_computed_get_response (a_request, a_response, a_uri_content.content, l_extension, a_uri_content.last_modified)
 		end
 
 feature {NONE} -- Implementation: File location services

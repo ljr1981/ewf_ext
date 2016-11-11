@@ -46,10 +46,7 @@ feature {NONE} -- Initialization
 			body.extend (a_widget)
 
 			head.add_content (create {HTML_TITLE}.make_with_content (<<create {HTML_TEXT}.make_with_text (a_title)>>))
-				-- Cache-control: max-age=300
-			head.extend (new_meta)
-			last_new_meta.set_html_equiv ("Cache-control") -- See EIS link above
-			last_new_meta.set_content ("max-age=300")
+
 				-- Viewport
 			head.extend (new_meta)
 			last_new_meta.set_name ("viewport")
@@ -94,11 +91,11 @@ feature {NONE} -- Initialization
 	build_body_styles (a_widget: HTML_TAG)
 			-- `build_body_styles', which are <style> elements extracted from `a_widget' tree.
 		local
-			l_body_styles: ARRAYED_LIST [HTML_STYLE]
+			l_head_styles: ARRAYED_LIST [HTML_STYLE]
 		do
-			create l_body_styles.make (10)
-			a_widget.add_body_styles (l_body_styles)
-			across l_body_styles as ic_styles loop body.extend (ic_styles.item) end
+			create l_head_styles.make (10)
+			a_widget.add_head_styles (l_head_styles)
+			across l_head_styles as ic_styles loop head.extend (ic_styles.item) end
 		end
 
 	make_standard_with_raw_text (a_title, a_language_code, a_raw_text: STRING)

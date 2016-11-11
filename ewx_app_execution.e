@@ -16,6 +16,8 @@ inherit
 
 	WSF_ROUTED_URI_TEMPLATE_HELPER
 
+	EWX_COMPRESSION_ENABLED
+
 feature {NONE} -- Initialization
 
 	setup_router
