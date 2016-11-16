@@ -18,6 +18,8 @@ feature {NONE} -- Initialization
 
 	build_head (a_widget: HTML_TAG; a_head: HTML_HEAD)
 			-- Build the <head> ... </head> content.
+		require
+			not_built: not is_head_built
 		local
 			l_javascript_files: HASH_TABLE [HTML_SCRIPT, INTEGER]
 			l_css_files: HASH_TABLE [HTML_LINK, INTEGER]
