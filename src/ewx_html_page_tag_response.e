@@ -10,6 +10,8 @@ inherit
 	HTML_PAGE
 		rename
 			documentation as html_documentation
+		redefine
+			make_standard
 		end
 
 	WSF_RESPONSE_MESSAGE
@@ -18,114 +20,18 @@ inherit
 			out
 		end
 
-	EWX_HEAD_BUILDER
-		undefine
-			default_create,
-			out
-		end
-
 feature {NONE} -- Initialization
 
 	make_standard (a_title, a_language_code: STRING; a_widget: HTML_DIV)
-			-- `make_standard' with `a_title' and `a_language_code' using `a_widget'.
-			-- The `a_widget' will be the first subordinate <tag> beneath <body>.
-		note
-			EIS: "name=cache_control_max_age",
-					"src=https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching#cache-control"
-		local
-			l_javascript: HTML_SCRIPT
+			-- <Precursor>
 		do
 			status_code := {HTTP_STATUS_CODE}.ok
 
-			set_xmlns ("http://www.w3.org/1999/xhtml")
-			set_lang (a_language_code)
-			set_xml_lang (a_language_code)
-
-			initialize_widget (a_widget)
-			body.extend (a_widget)
-
-			head.extend (new_title)
-				last_new_title.extend (new_text)
-				last_new_text.set_text_content (a_title)
-
-				-- Viewport
-			head.extend (new_meta)
-				last_new_meta.set_name ("viewport")
-				last_new_meta.set_content ("width=device-width, initial-scale=1")
+			Precursor (a_title, a_language_code, a_widget)
 
 			--build_head (body, head)
 			create header.make_from_raw_header_data (head.html_out)
 			header.put_content_type_text_html
-
-			extend_body_css_link_references (a_widget)
-			extend_body_javascript_references (a_widget)
-
-			extend_body_scripts (a_widget)
-			extend_body_styles (a_widget)
-		end
-
-	initialize_widget (a_widget: HTML_TAG)
-			-- `initialize_widget' `a_widget' by adding content.
-		deferred
-		end
-
-	make_standard_with_raw_text (a_title, a_language_code, a_raw_text: STRING)
-			-- `make_standard' with `a_title', `a_language_code', and `a_raw_text'.
-			-- See `make_standard' for more feature comments.
-		local
-			l_div: HTML_DIV
-		do
-			create l_div
-			l_div.extend (create {HTML_TEXT}.make_with_text (a_raw_text))
-			make_standard (a_title, a_language_code, l_div)
-		end
-
-feature {NONE} -- Initialization Support
-
-	extend_body_css_link_references (a_widget: HTML_DIV)
-			-- Extend CSS <link> references into `a_widget'.
-		local
-			l_css_link: HTML_LINK
-		do
-			across
-				manually_specified_css_files as ic
-			loop
-				create l_css_link.make_as_css_file_link (ic.item)
-				body.extend (l_css_link)
-			end
-		end
-
-	extend_body_javascript_references (a_widget: HTML_DIV)
-			-- Extend JS <script> file references into `a_widget'.
-		local
-			l_javascript: HTML_SCRIPT
-		do
-			across
-				manually_specified_javascript_files as ic
-			loop
-				create l_javascript.make_with_javascript_file_name (ic.item)
-				body.extend (l_javascript)
-			end
-		end
-
-	extend_body_scripts (a_widget: HTML_TAG)
-			-- `extend_body_scripts', which are <script> elements extracted from `a_widget' tree.
-		local
-			l_body_scripts: ARRAYED_LIST [HTML_SCRIPT]
-		do
-			create l_body_scripts.make (10)
-			a_widget.add_body_scripts (l_body_scripts)
-			across l_body_scripts as ic_scripts loop body.extend (ic_scripts.item) end
-		end
-
-	extend_body_styles (a_widget: HTML_TAG)
-			-- `extend_body_styles', which are <style> elements extracted from `a_widget' tree.
-		local
-			l_head_styles: ARRAYED_LIST [HTML_STYLE]
-		do
-			create l_head_styles.make (10)
-			a_widget.add_head_styles (l_head_styles)
-			across l_head_styles as ic_styles loop head.extend (ic_styles.item) end
 		end
 
 feature -- Basic Ops

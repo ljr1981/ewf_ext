@@ -105,11 +105,12 @@ feature {NONE} -- Basic Ops
 			l_string_compressor: ZLIB_STRING_COMPRESS
 		do
 			create Result.make_empty
-			create l_string_compressor.string_stream_with_size (Result, deflation_chunk_size)
-			l_string_compressor.put_string_with_options (a_string, {ZLIB_CONSTANTS}.Z_default_compression,
-															default_compression_level,
-															default_memory_level,
-															{ZLIB_CONSTANTS}.z_default_strategy.to_integer_32)
+			create l_string_compressor.string_stream (Result) --.string_stream_with_size (Result, deflation_chunk_size)
+			l_string_compressor.put_string (a_string)
+--			l_string_compressor.put_string_with_options (a_string, {ZLIB_CONSTANTS}.Z_default_compression,
+--															default_compression_level,
+--															default_memory_level,
+--															{ZLIB_CONSTANTS}.z_default_strategy.to_integer_32)
 		end
 
 feature {NONE} -- Implementation: Constants
