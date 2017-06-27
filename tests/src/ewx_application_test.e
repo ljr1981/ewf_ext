@@ -1,15 +1,15 @@
 note
 	description: "[
-		Representation of a template Web Server {EWX_APPLICATION} 
+		Representation of a template Web Server {EWX_APPLICATION_TEST} 
 			as a {WSF_DEFAULT_SERVICE} using {EWX_APP_EXECUTION} as
 			a router/responder.
 		]"
 
 class
-	EWX_APPLICATION
+	EWX_APPLICATION_TEST
 
 inherit
-	WSF_DEFAULT_SERVICE [EWX_APP_EXECUTION_TEMPLATE]
+	WSF_DEFAULT_SERVICE [EWX_APP_EXECUTION_TEST]
 		redefine
 			initialize
 		end

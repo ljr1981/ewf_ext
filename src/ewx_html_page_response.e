@@ -1,6 +1,6 @@
 note
 	description: "[
-		Representation of a common {WX_HTML_PAGE_RESPONSE}.
+		EWX Representation of a common {WSF_HTML_PAGE_RESPONSE}.
 		]"
 	design: "[
 		See design notes at the end of this class.

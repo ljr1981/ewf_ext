@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="ewf_ext" uuid="20BC8E08-C002-E199-2916-000000436B69" library_target="ewf_ext">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="ewf_ext" uuid="20BC8E08-C002-E199-2916-000000436B69" library_target="ewf_ext">
 	<description>ewf_ext implementation</description>
 	<target name="ewf_ext">
-		<root all_classes="true"/>
-		<option warning="true" void_safety="transitional" syntax="provisional">
+		<root class="EWX_APPLICATION_TEST" feature="make_and_launch"/>
+		<option warning="true" syntax="provisional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<setting name="concurrency" value="scoop"/>
+		<capability>
+			<concurrency support="scoop" use="thread"/>
+			<void_safety support="transitional" use="transitional"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="default_standalone" location="..\ewf\library\server\wsf\default\standalone-safe.ecf"/>
 		<library name="encoder-safe" location="..\ewf\library\text\encoder\encoder-safe.ecf"/>
@@ -31,7 +34,7 @@
 	</target>
 	<target name="test" extends="ewf_ext">
 		<description>ewf_ext Tests</description>
-		<root class="EWX_APPLICATION" feature="make_and_launch"/>
+		<root class="EWX_APPLICATION_TEST" feature="make_and_launch"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
 			<exclude>/.svn$</exclude>
@@ -42,7 +45,9 @@
 		<option profile="false">
 		</option>
 		<setting name="console_application" value="false"/>
-		<setting name="concurrency" value="scoop"/>
+		<capability>
+			<concurrency support="scoop" use="thread"/>
+		</capability>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
 		<cluster name="tests" location=".\tests\" recursive="true"/>
 	</target>

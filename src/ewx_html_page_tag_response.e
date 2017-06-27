@@ -5,7 +5,7 @@ note
 
 deferred class
 	EWX_HTML_PAGE_TAG_RESPONSE
-
+	
 inherit
 	HTML_PAGE
 		rename

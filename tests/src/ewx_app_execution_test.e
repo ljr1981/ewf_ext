@@ -1,13 +1,13 @@
 note
 	description: "[
-		Representation of a {EWX_APP_EXECUTION_TEMPLATE}.
+		Representation of a {EWX_APP_EXECUTION_TEST}.
 		]"
 	design: "[
 		See notes at the end of this class.
 		]"
 
 class
-	EWX_APP_EXECUTION_TEMPLATE
+	EWX_APP_EXECUTION_TEST
 
 inherit
 	EWX_APP_EXECUTION

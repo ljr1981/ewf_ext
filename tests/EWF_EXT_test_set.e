@@ -8,7 +8,8 @@ class
 inherit
 	EQA_TEST_SET
 		rename
-			assert as assert_old
+			assert as assert_old,
+			clean as test_set_clean
 		end
 
 	EQA_COMMONLY_USED_ASSERTIONS
@@ -20,6 +21,76 @@ inherit
 		undefine
 			default_create
 		end
+
+	HTML_FACTORY
+		undefine
+			default_create
+		end
+
+feature -- Testing: EWX_HTML_PAGE
+
+	ewx_html_page_test
+		local
+			l_page: EWX_HTML_PAGE
+		do
+			create l_page
+				assert_strings_equal ("default_html", default_html, l_page.html_out)
+
+				-- <head> stuff ...
+			new_div.add_link_head_item (new_link)
+					last_new_link.set_as_css_file_link ("user1.css")
+				last_new_div.add_link_head_item (new_link)
+					last_new_link.set_as_css_file_link ("user2.css")
+				last_new_div.add_meta_head_item (new_meta)
+				last_new_div.add_script_head_item (new_script)
+				last_new_div.add_style_head_item (new_style)
+					-- <body> stuff ...
+				last_new_div.add_link_body_item (new_link)
+					last_new_link.set_as_css_file_link ("user1.css")
+				last_new_div.add_link_body_item (new_link)
+					last_new_link.set_as_css_file_link ("user2.css")
+				last_new_div.add_script_body_item (new_script)
+				last_new_div.add_style_body_item (new_style)
+
+			create l_page.make_standard ("My Title", "en", "http://www.example.com", last_new_div)
+			l_page.prepare_to_send
+
+				assert_strings_equal ("post_prepare_to_send_html_out", post_prepare_to_send_html_out, l_page.html_out)
+		end
+
+	default_html: STRING = "[
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+</body></html>
+
+]"
+
+	post_prepare_to_send_html_out: STRING = "[
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><title>My Title</title>
+
+<base>http://www.example.com</base>
+<meta/>
+<link href="user2.css"  rel="stylesheet"  type="text/css"/>
+<script></script>
+<style></style>
+</head>
+<body>
+<!-- body content-->
+<div></div>
+<!-- body links-->
+<link href="user2.css"  rel="stylesheet"  type="text/css"/>
+<!-- body scripts-->
+<script></script>
+<!-- body styles-->
+<style></style>
+
+</body></html>
+
+]"
 
 feature -- Testing: Creation
 
