@@ -2,6 +2,19 @@ note
 	description: "[
 		Representation of a {EWX_APP_EXECUTION_TEST}.
 		]"
+	overview: "[
+		This class has a single web page (see `hello_request_handler'), which
+		uses an example of an {EWX_HTML_PAGE} class using CDN-based Boostrap 4
+		to form itself as a Sample Blog page.
+		
+		The page consists of several components:
+		(1) Navbar
+		(2) Blog Header
+		(3) Blogs #1, #2, and #3
+		(4) Blog sidebar
+		(5) One <link> and three <script> items in the <head> for CDN external references
+		(6) Blog CSS injected as an internal <style>
+		]"
 	design: "[
 		See notes at the end of this class.
 		]"
@@ -13,6 +26,11 @@ inherit
 	EWX_APP_EXECUTION
 		redefine
 			setup_router
+		end
+
+	HTML_FACTORY
+		undefine
+			default_create
 		end
 
 create
@@ -41,39 +59,50 @@ feature -- Execution
 	hello_request_handler (a_request: WSF_REQUEST; a_response: WSF_RESPONSE)
 			-- Send `l_html_page_response' through `a_response' message based on `a_request'.
 		note
-			design: "[
-				This routine is designed to specifically handle a Client request such as:
-				
-				http://localhost:9999/hello
-				
-				It is a single static HTML page sent back to the Client as a response.
-				
-				The basic steps followed are:
-				
-				(1) Create the response object (e.g. `l_html_page_response').
-				(2) Call any "settings" (e.g. Optional and Required).
-				(3) Send the response page back to the Client through the HTTPD Web Server.
-				
-				Therefore, once this ECF-template is in-place, you may compile and
-				run this application (either in Work-bench mode or Finalized). When you
-				do, then move to your browser and navigate to: http://localhost:9999/hello
-				This will demonstrate this as a working template. You may then redesign
-				and code out your own Web Server as you like, need, and want.
-				]"
+			EIS: "src=http://localhost:9999/hello"
 		local
-			l_html_page_response: WSF_HTML_PAGE_RESPONSE
+			l_page: EWX_HTML_PAGE
+			l_div,
+			l_div_column,
+			l_div_row: HTML_DIV
+			l_content: STRING
 		do
-			create l_html_page_response.make
+			create l_div
+					-- <head> materials ...
+				new_link.set_as_cdn_stylesheet ("https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css", "sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ", "anonymous")
+				l_div.add_link_head_item (last_new_link)
 
-				-- Optional settings
-			l_html_page_response.set_title ("Hello Eiffel Web World")
-			l_html_page_response.set_language ("en")
+				new_script.set_as_cdn_javascript ("https://code.jquery.com/jquery-3.1.1.slim.min.js", "sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n", "anonymous")
+				l_div.add_script_head_item (last_new_script)
 
-				-- Required (loads CSS and page body)
-			l_html_page_response.head_lines.force (hello_world_css)
-			l_html_page_response.set_body (hello_world_body)
+				new_script.set_as_cdn_javascript ("https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js", "sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb", "anonymous")
+				l_div.add_script_head_item (last_new_script)
 
-			a_response.send (l_html_page_response)
+				new_script.set_as_cdn_javascript ("https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js", "sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn", "anonymous")
+				l_div.add_script_head_item (last_new_script)
+
+					-- <body> content ...
+				create l_div_column
+					l_div_column.set_class_names ("container")
+				create l_div_row
+					l_div_row.set_class_names ("row")
+				l_div_column.add_content (l_div_row)
+					create l_content.make_empty
+					l_content.append_string_general (blog_main (<<blog_post_1, blog_post_2, blog_post_3>>).html_out)
+					l_content.append_character ('%N')
+					l_content.append_string_general (blog_side_bar (blog_archives).html_out)
+					l_div_row.add_text_content (l_content)
+
+				l_div.add_content (navbar)
+				l_div.add_content (blog_header)
+				l_div.add_content (l_div_column)
+
+				new_style.set_text_content (blog_css)
+				l_div.add_style_body_item (last_new_style)
+
+			create l_page.make_standard ("My Test Page", "en", "", l_div)
+			l_page.prepare_to_send
+			a_response.send (l_page)
 		end
 
 feature {NONE} -- Implementation: Constants
@@ -81,83 +110,400 @@ feature {NONE} -- Implementation: Constants
 	uri_hello: STRING = "/hello"
 			-- `uri_hello' router template map.
 
-	hello_world_body: STRING = "[
-<div class="block__element">
-	Hello Eiffel Web World!
-</div>
-<div class="main__paragraph">
-	<p class="column__right">
-		This is the first paragraph to display. It will be followed by a standard Lorem Ipsum.
-	</p>
-	<p class="column__left">
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tincidunt elit nec 
-		imperdiet dignissim. Cras vehicula nec dolor non ultrices. Nam porta, metus in 
-		tincidunt sagittis, enim turpis rutrum diam, vitae malesuada orci sem id metus. 
-		Nulla ut purus et odio molestie aliquet. Mauris bibendum turpis vitae augue 
-		vehicula, ac ullamcorper lectus pulvinar. Sed ornare sapien eu purus lacinia 
-		efficitur. Duis quis lobortis nibh, id vulputate tortor. Duis at eros at libero 
-		sollicitudin aliquam ut non ipsum. Vestibulum sit amet pharetra metus. Nunc 
-		massa velit, placerat vel tellus a, gravida egestas purus. Nulla facilisi.
-	</p>
-	<p class="column__right">
-		Pellentesque habitant morbi tristique senectus et netus et malesuada fames 
-		ac turpis egestas. Nam quis ex sed erat lacinia semper et ac justo. Vivamus 
-		iaculis bibendum arcu nec efficitur. Etiam dapibus felis eget rhoncus sagittis. 
-		Nulla facilisi. Aliquam erat volutpat. Pellentesque hendrerit et urna eget 
-		ullamcorper.
-	</p>
-	<p class="column__left">
-		Maecenas lobortis, ante quis porta vulputate, quam libero volutpat augue, 
-		quis ornare erat nunc sit amet ante. Mauris vitae rhoncus turpis. Aliquam 
-		erat volutpat. Praesent interdum dui et justo auctor feugiat. Donec quis 
-		ultricies mauris, at imperdiet neque. Suspendisse ut lorem diam. Morbi sapien 
-		mi, accumsan nec metus in, sodales tempus dui. Fusce in lobortis elit, 
-		volutpat accumsan urna. Nulla scelerisque, est ut laoreet feugiat, tellus 
-		ipsum elementum ante, eget dictum tellus nisi id neque. Nam eu sem at urna 
-		blandit molestie. Nulla eu vestibulum ipsum. Nullam feugiat nunc eget elit 
-		maximus lobortis. Integer at dapibus magna. Nulla pellentesque lacus eu 
-		condimentum malesuada. Mauris quis efficitur quam. Suspendisse potenti.
-	</p>
-	<p class="column__right">
-		Proin ut neque enim. Proin posuere viverra nunc. Nam vel facilisis sem. Sed 
-		elementum dui condimentum, aliquam ante at, laoreet arcu. Praesent nec magna 
-		accumsan, volutpat nisi et, blandit ex. Class aptent taciti sociosqu ad litora 
-		torquent per conubia nostra, per inceptos himenaeos. Nulla nibh lorem, iaculis 
-		in dolor eu, varius finibus ex. Sed scelerisque finibus diam non consectetur. 
-		Morbi convallis vehicula dui non gravida. Donec placerat vitae purus suscipit 
-		auctor. Aenean sapien lorem, blandit vitae ullamcorper vitae, ultrices 
-		ullamcorper mauris.
-	</p>
-	<p class="column__left">
-		Praesent vitae pellentesque metus. Aliquam rutrum elementum cursus. Nullam 
-		sed tempor turpis, vel fringilla orci. In pharetra velit sapien, eu sollicitudin 
-		arcu varius ac. Sed turpis justo, venenatis eu volutpat quis, laoreet finibus 
-		est. Sed vulputate porta est vitae facilisis. Vestibulum vitae sem nisi. 
-		Curabitur non hendrerit tortor. Praesent in lacus bibendum, pretium augue 
-		nec, commodo velit.
-	</p>
-</div>
+feature {NONE} -- Components
+
+	navbar: HTML_DIV
+		local
+			l_div2: HTML_DIV
+		do
+			create Result
+			Result.set_class_names ("blog-masthead")
+				create l_div2
+				l_div2.set_class_names ("container")
+				Result.add_content (l_div2)
+					l_div2.add_content (new_nav)
+						last_new_nav.set_class_names ("nav blog-nav")
+						last_new_nav.add_content (new_a)
+							last_new_a.set_class_names ("nav-link active")
+							last_new_a.set_href ("#")
+							last_new_a.set_text_content ("Home")
+						last_new_nav.add_content (new_a)
+							last_new_a.set_class_names ("nav-link")
+							last_new_a.set_href ("#")
+							last_new_a.set_text_content ("New features")
+						last_new_nav.add_content (new_a)
+							last_new_a.set_class_names ("nav-link")
+							last_new_a.set_href ("#")
+							last_new_a.set_text_content ("Press")
+						last_new_nav.add_content (new_a)
+							last_new_a.set_class_names ("nav-link")
+							last_new_a.set_href ("#")
+							last_new_a.set_text_content ("New hires")
+						last_new_nav.add_content (new_a)
+							last_new_a.set_class_names ("nav-link")
+							last_new_a.set_href ("#")
+							last_new_a.set_text_content ("About")
+		end
+
+	blog_header: HTML_DIV
+		local
+			l_div2: HTML_DIV
+		do
+			create Result
+			Result.set_class_names ("blog-header")
+				create l_div2
+				l_div2.set_class_names ("container")
+				Result.add_content (l_div2)
+					l_div2.add_content (new_h1)
+						last_new_h1.set_class_names ("blog-title")
+						last_new_h1.set_text_content ("The Bootstrap Blog")
+					l_div2.add_content (new_p)
+						last_new_p.set_class_names ("lead blog-description")
+						last_new_p.set_text_content ("An example blog template built with Bootstrap.")
+
+		end
+
+	blog_css: STRING = "[
+/*
+ * Globals
+ */
+
+@media (min-width: 48em) {
+  html {
+    font-size: 18px;
+  }
+}
+
+body {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: #555;
+}
+
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  color: #333;
+}
+
+
+/*
+ * Override Bootstrap's default container.
+ */
+
+.container {
+  max-width: 60rem;
+}
+
+
+/*
+ * Masthead for nav
+ */
+
+.blog-masthead {
+  margin-bottom: 3rem;
+  background-color: #428bca;
+  -webkit-box-shadow: inset 0 -.1rem .25rem rgba(0,0,0,.1);
+          box-shadow: inset 0 -.1rem .25rem rgba(0,0,0,.1);
+}
+
+/* Nav links */
+.nav-link {
+  position: relative;
+  padding: 1rem;
+  font-weight: 500;
+  color: #cdddeb;
+}
+.nav-link:hover,
+.nav-link:focus {
+  color: #fff;
+  background-color: transparent;
+}
+
+/* Active state gets a caret at the bottom */
+.nav-link.active {
+  color: #fff;
+}
+.nav-link.active:after {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+  margin-left: -.3rem;
+  vertical-align: middle;
+  content: "";
+  border-right: .3rem solid transparent;
+  border-bottom: .3rem solid;
+  border-left: .3rem solid transparent;
+}
+
+
+/*
+ * Blog name and description
+ */
+
+.blog-header {
+  padding-bottom: 1.25rem;
+  margin-bottom: 2rem;
+  border-bottom: .05rem solid #eee;
+}
+.blog-title {
+  margin-bottom: 0;
+  font-size: 2rem;
+  font-weight: normal;
+}
+.blog-description {
+  font-size: 1.1rem;
+  color: #999;
+}
+
+@media (min-width: 40em) {
+  .blog-title {
+    font-size: 3.5rem;
+  }
+}
+
+
+/*
+ * Main column and sidebar layout
+ */
+
+/* Sidebar modules for boxing content */
+.sidebar-module {
+  padding: 1rem;
+  /*margin: 0 -1rem 1rem;*/
+}
+.sidebar-module-inset {
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: .25rem;
+}
+.sidebar-module-inset p:last-child,
+.sidebar-module-inset ul:last-child,
+.sidebar-module-inset ol:last-child {
+  margin-bottom: 0;
+}
+
+
+/* Pagination */
+.blog-pagination {
+  margin-bottom: 4rem;
+}
+.blog-pagination > .btn {
+  border-radius: 2rem;
+}
+
+
+/*
+ * Blog posts
+ */
+
+.blog-post {
+  margin-bottom: 4rem;
+}
+.blog-post-title {
+  margin-bottom: .25rem;
+  font-size: 2.5rem;
+}
+.blog-post-meta {
+  margin-bottom: 1.25rem;
+  color: #999;
+}
+
+
+/*
+ * Footer
+ */
+
+.blog-footer {
+  padding: 2.5rem 0;
+  color: #999;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-top: .05rem solid #e5e5e5;
+}
+.blog-footer p:last-child {
+  margin-bottom: 0;
+}
 ]"
 
-	hello_world_css: STRING = "[
-<style>
-	.block__element {
-		color: blue; 
-		background-color: yellow;
-		font-size: 30px;
-		font-family: "Lucida Console";
-		float: right;
-		}
-	.column__left {
-		float: left;
-		}
-	.column__right {
-		float: right;
-		}
-</style>
+feature {NONE} -- Blog Posts
+
+	blog_post_1: HTML_DIV do Result := blog_post ("Sample blog post", "January 1, 2014", "#", "Mark", blog_post_1_string) end
+	blog_post_2: HTML_DIV do Result := blog_post ("Another blog post", "December 23, 2013", "#", "Jacob", blog_post_2_string) end
+	blog_post_3: HTML_DIV do Result := blog_post ("New feature", "December 14, 2013", "#", "Chris", blog_post_3_string) end
+
+feature {NONE} -- Blog Ops
+
+	blog_main (a_posts: ARRAY [HTML_DIV]): HTML_DIV
+		do
+			create Result
+				Result.set_class_names ("col-sm-8 blog-main")
+			across
+				a_posts as ic
+			loop
+				Result.add_content (ic.item)
+			end
+		end
+
+	blog_post (a_title, a_date, a_author_href, a_author, a_content: STRING): HTML_DIV
+		do
+			create Result
+			Result.add_content (blog_post_title (a_title))
+			Result.add_content (blog_post_title_meta (a_date, a_author_href, a_author))
+			Result.add_text_content (a_content)
+		end
+
+	blog_post_title (a_title: STRING): HTML_H2
+		do
+			Result := new_h2
+				last_new_h2.set_class_names ("blog-post-title")
+				last_new_h2.add_text_content (a_title)
+		end
+
+	blog_post_title_meta (a_date, a_href, a_author: STRING): HTML_P
+		do
+			Result := new_p
+				last_new_p.set_class_names ("blog-post-meta")
+				new_text_content.append_string_general (a_date)
+				last_new_text_content.append_string_general (" by ")
+				new_a.set_href (a_href)
+				last_new_a.add_text_content (a_author)
+				last_new_text_content.append_string_general (last_new_a.html_out)
+				Result.add_text_content (last_new_text_content)
+		end
+
+feature {NONE} -- Blog Contents
+
+	blog_post_1_string: STRING = "[
+            <p>This blog post shows a few different types of content that's supported and styled with Bootstrap. Basic typography, images, and code are all supported.</p>
+            <hr>
+            <p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.</p>
+            <blockquote>
+              <p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+            </blockquote>
+            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+            <h2>Heading</h2>
+            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+            <h3>Sub-heading</h3>
+            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+            <pre><code>Example code block</code></pre>
+            <p>Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
+            <h3>Sub-heading</h3>
+            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+            <ul>
+              <li>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</li>
+              <li>Donec id elit non mi porta gravida at eget metus.</li>
+              <li>Nulla vitae elit libero, a pharetra augue.</li>
+            </ul>
+            <p>Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.</p>
+            <ol>
+              <li>Vestibulum id ligula porta felis euismod semper.</li>
+              <li>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</li>
+              <li>Maecenas sed diam eget risus varius blandit sit amet non magna.</li>
+            </ol>
+            <p>Cras mattis consectetur purus sit amet fermentum. Sed posuere consectetur est at lobortis.</p>
 ]"
 
-note
+	blog_post_2_string: STRING = "[
+            <p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.</p>
+            <blockquote>
+              <p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+            </blockquote>
+            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+]"
+
+	blog_post_3_string: STRING = "[
+            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+            <ul>
+              <li>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</li>
+              <li>Donec id elit non mi porta gravida at eget metus.</li>
+              <li>Nulla vitae elit libero, a pharetra augue.</li>
+            </ul>
+            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+            <p>Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.</p>
+]"
+
+feature {NONE} -- Blog Sidebar
+
+	blog_archives: ARRAY [TUPLE [href, mmyyyy: STRING]]
+		do
+			Result := <<
+						["#","March 2014"],
+						["#","February 2014"],
+						["#","January 2014"],
+						["#","December 2013"],
+						["#","November 2013"],
+						["#","October 2013"],
+						["#","September 2013"],
+						["#","August 2013"],
+						["#","July 2013"],
+						["#","June 2013"],
+						["#","May 2013"],
+						["#","April 2013"]
+						>>
+		end
+
+	blog_side_bar (a_items: ARRAY [TUPLE [href, mmyyyy: STRING]]): HTML_DIV
+		local
+			l_div1,
+			l_div2,
+			l_div3: HTML_DIV
+		do
+			create Result
+				Result.set_class_names ("col-sm-3 offset-sm-1 blog-sidebar")
+				create l_div1
+				Result.add_content (l_div1)
+					l_div1.set_class_names ("sidebar-module sidebar-module-inset")
+					l_div1.add_content (new_h4)
+						last_new_h4.add_text_content ("About")
+					l_div1.add_content (new_p)
+						last_new_p.set_text_content ("Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.")
+				create l_div2
+				Result.add_content (l_div2)
+					l_div2.set_class_names ("sidebar-module")
+					l_div2.add_content (new_h4)
+						last_new_h4.set_text_content ("Archives")
+					l_div2.add_content (new_ol)
+						last_new_ol.set_class_names ("list-unstyled")
+--						last_new_ol.add_content (new_li)
+--							last_new_li.add_content (new_a)
+--								last_new
+						across
+							a_items as ic
+						loop
+							last_new_ol.add_content (new_li)
+								last_new_li.add_content (new_a)
+									last_new_a.set_href (ic.item.href)
+									last_new_a.set_text_content (ic.item.mmyyyy)
+						end
+				create l_div3
+				Result.add_content (l_div3)
+					l_div3.set_class_names ("sidebar-module")
+					l_div3.add_content (new_h4)
+						last_new_h4.set_text_content ("Elsewhere")
+					l_div3.add_content (new_ol)
+						last_new_ol.add_content (new_li)
+							last_new_li.add_content (new_a)
+								last_new_a.set_href ("#")
+								last_new_a.set_text_content ("GitHub")
+						last_new_ol.add_content (new_li)
+							last_new_li.add_content (new_a)
+								last_new_a.set_href ("#")
+								last_new_a.set_text_content ("Twitter")
+						last_new_ol.add_content (new_li)
+							last_new_li.add_content (new_a)
+								last_new_a.set_href ("#")
+								last_new_a.set_text_content ("Facebook")
+		end
+
+;note
 	design: "[
 		{EWX_APP_EXECUTION} is just a template (starting point) to build from. You may
 		design your application any way you like or want. However, the basics are
