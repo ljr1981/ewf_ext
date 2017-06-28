@@ -29,18 +29,7 @@ feature {NONE} -- Initialization
 
 	initialize
 		do
-			new_script.set_type ("text/javascript")
-				last_new_script.set_src ("https://code.jquery.com/jquery-1.x-git.min.js")
-			root_div.add_script_head_item (last_new_script)
-
-			new_script.set_type ("text/javascript")
-				last_new_script.set_src ("https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js")
-			root_div.add_script_head_item (last_new_script)
-
-			new_link.set_rel ("stylesheet")
-				last_new_link.set_type ("text/css")
-				last_new_link.set_href ("https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css")
-			root_div.add_link_head_item (last_new_link)
+			set_datatables_zero_configuration_package (root_div)
 
 			new_script.set_text_content (document_ready_js)
 			root_div.add_script_body_item (last_new_script)

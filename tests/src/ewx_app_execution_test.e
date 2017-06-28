@@ -79,17 +79,7 @@ feature -- Execution
 		do
 			create l_div
 					-- <head> materials ...
-				new_link.set_as_cdn_stylesheet ("https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css", "sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ", "anonymous")
-				l_div.add_link_head_item (last_new_link)
-
-				new_script.set_as_cdn_javascript ("https://code.jquery.com/jquery-3.1.1.slim.min.js", "sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n", "anonymous")
-				l_div.add_script_head_item (last_new_script)
-
-				new_script.set_as_cdn_javascript ("https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js", "sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb", "anonymous")
-				l_div.add_script_head_item (last_new_script)
-
-				new_script.set_as_cdn_javascript ("https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js", "sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn", "anonymous")
-				l_div.add_script_head_item (last_new_script)
+				set_bootstrap_4_package (l_div)
 
 					-- <body> content ...
 				create l_div_column
