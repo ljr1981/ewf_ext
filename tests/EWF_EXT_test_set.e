@@ -52,7 +52,7 @@ feature -- Testing: EWX_HTML_PAGE
 				last_new_div.add_script_body_item (new_script)
 				last_new_div.add_style_body_item (new_style)
 
-			create l_page.make_standard ("My Title", "en", "http://www.example.com", last_new_div)
+			create l_page.make_with_body ("My Title", "en", "http://www.example.com", last_new_div)
 			l_page.prepare_to_send
 
 				assert_strings_equal ("post_prepare_to_send_html_out", post_prepare_to_send_html_out, l_page.html_out)

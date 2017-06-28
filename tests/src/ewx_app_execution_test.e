@@ -52,9 +52,19 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			map_uri_agent (uri_hello, agent hello_request_handler (?, ?), no_request_methods)
+			map_uri_agent ("/datatable", agent datatable_handler (?, ?), no_request_methods)
 		end
 
 feature -- Execution
+
+	datatable_handler (a_request: WSF_REQUEST; a_response: WSF_RESPONSE)
+		local
+			l_page: EWX_DATA_TABLES_EXAMPLE
+		do
+			create l_page.make_standard ("Data Table", "en", "")
+			l_page.prepare_to_send
+			a_response.send (l_page)
+		end
 
 	hello_request_handler (a_request: WSF_REQUEST; a_response: WSF_RESPONSE)
 			-- Send `l_html_page_response' through `a_response' message based on `a_request'.
@@ -100,7 +110,7 @@ feature -- Execution
 				new_style.set_text_content (blog_css)
 				l_div.add_style_body_item (last_new_style)
 
-			create l_page.make_standard ("My Test Page", "en", "", l_div)
+			create l_page.make_with_body ("My Test Page", "en", "", l_div)
 			l_page.prepare_to_send
 			a_response.send (l_page)
 		end

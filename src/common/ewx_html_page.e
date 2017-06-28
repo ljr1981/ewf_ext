@@ -10,7 +10,8 @@ inherit
 
 create
 	default_create,
-	make_standard
+	make_standard,
+	make_with_body
 
 feature {NONE} -- Initialization
 
@@ -20,16 +21,36 @@ feature {NONE} -- Initialization
 			EIS: "name=doctype_spec", "protocol=URI",
 					"src=https://www.w3.org/TR/html5/syntax.html#doctype"
 		do
+			create_interface_objects
+			initialize
 			make
 		end
 
-	make_standard (a_title: attached like title; a_language: attached like language; a_base: like base; a_body: HTML_DIV)
+	make_standard (a_title: attached like title; a_language: attached like language; a_base: like base)
 		do
-			make
+			default_create
+			set_title (a_title)
+			set_language (a_language)
+			set_base (a_base)
+		end
+
+	make_with_body (a_title: attached like title; a_language: attached like language; a_base: like base; a_body: HTML_DIV)
+		do
+			default_create
 			set_title (a_title)
 			set_language (a_language)
 			set_base (a_base)
 			set_body_content (a_body)
+		end
+
+	create_interface_objects
+		do
+
+		end
+
+	initialize
+		do
+
 		end
 
 feature -- Ops
@@ -40,10 +61,10 @@ feature -- Ops
 		do
 			if attached body_content as al_body_content then
 			-- <!DOCTYPE>
-				-- <language>: Handled in `make_standard'.
+				-- <language>: Handled in `make_with_body'.
 
 			-- <head>
-				-- <title>: Handled in `make_standard'.
+				-- <title>: Handled in `make_with_body'.
 
 				-- <base>
 				if attached base as al_base then

@@ -44,7 +44,7 @@
 		</file_rule>
 		<option profile="false">
 		</option>
-		<setting name="console_application" value="false"/>
+		<setting name="console_application" value="true"/>
 		<capability>
 			<concurrency support="scoop" use="thread"/>
 		</capability>
