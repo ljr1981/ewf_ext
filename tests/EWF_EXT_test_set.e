@@ -37,20 +37,23 @@ feature -- Testing: EWX_HTML_PAGE
 				assert_strings_equal ("default_html", default_html, l_page.html_out)
 
 				-- <head> stuff ...
-			new_div.add_link_head_item (new_link)
-					last_new_link.set_as_css_file_link ("user1.css")
-				last_new_div.add_link_head_item (new_link)
-					last_new_link.set_as_css_file_link ("user2.css")
-				last_new_div.add_meta_head_item (new_meta)
-				last_new_div.add_script_head_item (new_script)
-				last_new_div.add_style_head_item (new_style)
-					-- <body> stuff ...
-				last_new_div.add_link_body_item (new_link)
-					last_new_link.set_as_css_file_link ("user1.css")
-				last_new_div.add_link_body_item (new_link)
-					last_new_link.set_as_css_file_link ("user2.css")
-				last_new_div.add_script_body_item (new_script)
-				last_new_div.add_style_body_item (new_style)
+			new_div.do_nothing
+
+			new_link.set_as_css_file_link ("user1.css")
+			last_new_div.add_link_head_item (last_new_link) --> do NOT add until complete because this gets hashed
+
+			new_link.set_as_css_file_link ("user2.css")
+			last_new_div.add_link_head_item (last_new_link)
+
+			set_bootstrap_4_package (last_new_div)
+
+
+			new_link.set_as_css_file_link ("user1.css")
+			last_new_div.add_link_body_item (last_new_link)
+
+			new_link.set_as_css_file_link ("user2.css")
+			last_new_div.add_link_body_item (last_new_link)
+
 
 			create l_page.make_with_body ("My Title", "en", "http://www.example.com", last_new_div)
 			l_page.prepare_to_send
@@ -91,32 +94,6 @@ feature -- Testing: EWX_HTML_PAGE
 </body></html>
 
 ]"
-
-feature -- Testing: Creation
-
-	ewf_ext_tests
-			-- `ewf_ext_tests'
-		local
-			l_any: EWX_ANY
-			l_page: EWX_HTML_PAGE_RESPONSE
-			l_cache: EWX_FILE_CACHE
-		do
---			create l_any
---			create l_page.make_standard ("title", "en", create {HTML_DIV})
---			create l_cache
-		end
-
-	ewx_html_page_tag_response_test
-		local
-			l_page: EWX_HTML_PAGE_TAG_RESPONSE
-		do
---			create l_page.make_standard ("my_title", "en", create {HTML_BODY}.make_with_content (<<create {HTML_TEXT}.make_with_text ("Hello World!")>>))
---			assert_strings_equal ("hello_world_page", hello_world, l_page.html_out)
-		end
-
-feature {NONE} -- Page Response Support
-
-	hello_world: STRING = "<!DOCTYPE html><html lang=%"en%"  xml:lang=%"en%"  xmlns=%"http://www.w3.org/1999/xhtml%"><head><title>my_title</title></head><body>Hello World!</body></html>"
 
 feature -- File Scan Tests
 
