@@ -36,10 +36,7 @@ feature {NONE} -- Initialization
 
 	make_with_body (a_title: attached like title; a_language: attached like language; a_base: like base; a_body: HTML_DIV)
 		do
-			default_create
-			set_title (a_title)
-			set_language (a_language)
-			set_base (a_base)
+			make_standard (a_title, a_language, a_base)
 			set_body_content (a_body)
 		end
 
