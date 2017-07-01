@@ -53,6 +53,10 @@ feature {NONE} -- Initialization
 feature -- Ops
 
 	prepare_to_send
+		note
+			todo: "[
+				(1) Fix the <base> so it works instead of commenting it out.
+				]"
 		local
 			l_comment: HTML_COMMENT
 		do
@@ -64,10 +68,10 @@ feature -- Ops
 				-- <title>: Handled in `make_with_body'.
 
 				-- <base>
-				if attached base as al_base then
-					al_body_content.new_base.add_text_content (al_base)
-					head_lines.force (al_body_content.last_new_base.html_out)
-				end
+--				if attached base as al_base then
+--					al_body_content.new_base.add_text_content (al_base)
+--					head_lines.force (al_body_content.last_new_base.html_out)
+--				end
 
 				-- <meta>
 				al_body_content.head_meta_items_refresh
@@ -206,12 +210,16 @@ feature {WSF_RESPONSE, TEST_SET_BRIDGE} -- Output
 	last_sent_html: STRING attribute create Result.make_empty end
 
 	doctype_string: STRING
+			-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+			-- or
+			-- <!DOCTYPE html>
 		do
-			create Result.make (64)
-			if attached doctype as al_doctype then
-				Result.append_string_general (al_doctype)
-				Result.append_character ('%N')
-			end
+--			create Result.make (64)
+--			if attached doctype as al_doctype then
+--				Result.append_string_general (al_doctype)
+--				Result.append_character ('%N')
+--			end
+			Result := "<!DOCTYPE html>"
 		end
 
 	html_start_tag_string: STRING
