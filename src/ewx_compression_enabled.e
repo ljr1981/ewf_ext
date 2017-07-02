@@ -61,12 +61,14 @@ feature {NONE} -- Basic Ops
 				-- Depending on compression results, set header data
  			l_http_header.put_content_length (l_message.count)
  			l_http_header.put_last_modified (a_datetime)
- 			l_http_header.put_cache_control ("max-age=120")
+ 			l_http_header.put_cache_control ("max-age=86400")
  			l_http_header.put_raw_header_data ("ETag:" + ('"').out + a_message.hash_code.out + ('"').out)
  			if attached a_request.request_time as al_time then
  				create l_http_date.make_from_date_time (al_time)
  				l_http_header.add_header ("Date:" + l_http_date.rfc1123_string)
  			end
+ 			l_http_header.put_raw_header_data ("Vary: Accept-Encoding")
+ 			l_http_header.put_raw_header_data ("Expires: " + expiry_date_string)
 
  				-- Final forming and sending of response
  			a_response.set_status_code ({HTTP_STATUS_CODE}.ok)
@@ -111,6 +113,65 @@ feature {NONE} -- Basic Ops
 --															default_compression_level,
 --															default_memory_level,
 --															{ZLIB_CONSTANTS}.z_default_strategy.to_integer_32)
+		end
+
+	expiry_date_string: STRING
+			-- `expiry_date_string' is the well-formed expiration date for headers.
+		local
+			l_date: DATE
+		do
+			create l_date.make_now
+			l_date.day_forth
+			inspect
+				l_date.day_of_the_week
+			when 1 then
+				Result := "sun, "
+			when 2 then
+				Result := "mon, "
+			when 3 then
+				Result := "tue, "
+			when 4 then
+				Result := "wed, "
+			when 5 then
+				Result := "thu, "
+			when 6 then
+				Result := "fri, "
+			when 7 then
+				Result := "sat, "
+			end
+			if l_date.day < 10 then
+				Result.append_string_general ("0" + l_date.day.out)
+			else
+				Result.append_string_general (l_date.day.out)
+			end
+			inspect
+				l_date.month
+			when 1 then
+				Result.append_string_general (" jan")
+			when 2 then
+				Result.append_string_general (" feb")
+			when 3 then
+				Result.append_string_general (" mar")
+			when 4 then
+				Result.append_string_general (" apr")
+			when 5 then
+				Result.append_string_general (" may")
+			when 6 then
+				Result.append_string_general (" jun")
+			when 7 then
+				Result.append_string_general (" jul")
+			when 8 then
+				Result.append_string_general (" aug")
+			when 9 then
+				Result.append_string_general (" sep")
+			when 10 then
+				Result.append_string_general (" oct")
+			when 11 then
+				Result.append_string_general (" nov")
+			when 12 then
+				Result.append_string_general (" dec")
+			end
+			Result.append_string_general (" " + l_date.year.out)
 		end
 
 feature {NONE} -- Implementation: Constants
