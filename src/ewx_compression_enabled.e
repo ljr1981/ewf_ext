@@ -47,6 +47,12 @@ feature {NONE} -- Basic Ops
  				l_http_header.put_content_type_application_pdf
  			elseif a_content_type.same_string ("zip") then
  				l_http_header.put_content_type_application_zip
+ 			elseif a_content_type.same_string ("png") then
+ 				l_http_header.put_content_type_image_png
+ 			elseif a_content_type.same_string ("jpg") then
+ 				l_http_header.put_content_type_image_jpg
+ 			elseif a_content_type.same_string ("gif") then
+ 				l_http_header.put_content_type_image_gif
  			else
  				l_http_header.put_content_type_text_plain
  			end

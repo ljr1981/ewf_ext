@@ -62,8 +62,7 @@ feature -- Testing: EWX_HTML_PAGE
 		end
 
 	default_html: STRING = "[
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
 <body>
 
 </body></html>
@@ -71,25 +70,24 @@ feature -- Testing: EWX_HTML_PAGE
 ]"
 
 	post_prepare_to_send_html_out: STRING = "[
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head><title>My Title</title>
 
-<base>http://www.example.com</base>
-<meta/>
+<link href="user1.css"  rel="stylesheet"  type="text/css"/>
 <link href="user2.css"  rel="stylesheet"  type="text/css"/>
-<script></script>
-<style></style>
+<link crossorigin="anonymous"  href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"  rel="stylesheet"  integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"/>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  type="text/javascript"  language="javascript"></script>
+<script crossorigin="anonymous"  src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"  integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"></script>
+<script crossorigin="anonymous"  src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"  integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"></script>
 </head>
 <body>
 <!-- body content-->
 <div></div>
 <!-- body links-->
+<link href="user1.css"  rel="stylesheet"  type="text/css"/>
 <link href="user2.css"  rel="stylesheet"  type="text/css"/>
 <!-- body scripts-->
-<script></script>
 <!-- body styles-->
-<style></style>
 
 </body></html>
 
