@@ -53,6 +53,8 @@ feature {NONE} -- Basic Ops
  				l_http_header.put_content_type_image_jpg
  			elseif a_content_type.same_string ("gif") then
  				l_http_header.put_content_type_image_gif
+ 			elseif a_content_type.same_string ("svg") then
+ 				l_http_header.put_content_type_image_svg_xml
  			else
  				l_http_header.put_content_type_text_plain
  			end
