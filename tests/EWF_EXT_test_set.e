@@ -99,10 +99,12 @@ feature -- File Scan Tests
 			--
 		local
 			l_cache: EWX_FILE_CACHE
+			l_path: PATH
 		do
+			create l_path.make_empty
 			create l_cache
 --			l_cache.set_last_file_template (".\files\")
-			l_cache.scan_path (create {PATH}.make_from_string (".\files\"), 0)
+			l_cache.scan_path (create {PATH}.make_from_string ("." + l_path.directory_separator.out + "files" + l_path.directory_separator.out), 0)
 		end
 
 end

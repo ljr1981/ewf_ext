@@ -128,8 +128,10 @@ feature {NONE} -- Implementation: Constants
 	files_folder_path: STRING
 		local
 			l_env: EXECUTION_ENVIRONMENT
+			l_path: PATH
 		once ("object")
-			Result := current_location + backslash.out + files_folder
+			create l_path.make_empty
+			Result := current_location + l_path.directory_separator.out + files_folder
 		end
 
 	files_folder: STRING
